@@ -1,0 +1,11 @@
+[user]
+    name = qmpwwsd
+    email = denyss@pixellot.tv
+[core]
+    editor = nvim
+[color]
+    ui = auto
+[init]
+    defaultBranch = master
+[diff]
+    tool = delta

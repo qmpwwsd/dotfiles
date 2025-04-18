@@ -1,0 +1,53 @@
+core:
+  trash:
+    strategy: auto
+    gomi_dir: /home/denys/.gomi
+  home_fallback: true
+  restore:
+    confirm: true
+    verbose: true
+  trash_dir: ""
+ui:
+  density: spacious # or compact
+  preview:
+    syntax_highlight: true
+    colorscheme: nord # Available themes: https://xyproto.github.io/splash/docs/index.html
+    directory_command: ls -F -A --color=always
+  style:
+    list_view:
+      cursor: "#AD58B4" # purple
+      selected: "#5FB458" # green
+      indent_on_select: false
+    detail_view:
+      border: "#FFFFFF"
+      info_pane:
+        deleted_from:
+          fg: "#EEEEEE"
+          bg: "#1C1C1C"
+        deleted_at:
+          fg: "#EEEEEE"
+          bg: "#1C1C1C"
+      preview_pane:
+        border: "#3C3C3C"
+        size:
+          fg: "#EEEEDD"
+          bg: "#3C3C3C"
+        scroll:
+          fg: "#EEEEDD"
+          bg: "#3C3C3C"
+  exit_message: bye! # Customizable exit message
+  paginator_type: dots # or arabic
+
+history:
+  include:
+    within_days: 100 # Only show files deleted in the last 100 days
+  exclude:
+    files:
+      - .DS_Store # Exclude .DS_Store files
+    patterns:
+      - "^go\\..*" # Exclude files starting with "go."
+    globs:
+      - "*.jpg" # Exclude JPEG files
+    size:
+      min: 0KB # Exclude empty files
+      max: 10GB # Exclude files larger than 10GB

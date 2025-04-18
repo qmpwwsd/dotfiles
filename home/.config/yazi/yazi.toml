@@ -1,0 +1,275 @@
+# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
+# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+[env]
+PATH = "/run/current-system/sw/bin:$PATH"
+
+[manager]
+ratio = [2, 3, 6]
+sort_by = "alphabetical"
+sort_sensitive = false
+sort_reverse = false
+sort_dir_first = true
+linemode = "none"
+show_hidden = false
+show_symlink = true
+scrolloff = 5
+
+[preview]
+tab_size = 2
+max_width = 600
+max_height = 900
+cache_dir = ""
+image_filter = "triangle"
+image_quality = 80
+sixel_fraction = 15
+ueberzug_scale = 1
+ueberzug_offset = [0, 0, 0, 0]
+
+[opener] # sets of definitions of openers referenced in rules below
+
+edit = [
+	{ run = 'nvim "$@"', desc = "nvim", block = true },
+	{ run = 'vim "$@"', desc = "vim", block = true },
+	{ run = 'meld "$@"', desc = "meld", block = true },
+]
+
+open = [{ run = 'xdg-open "$@"', desc = "Open" }]
+
+reveal = [
+	{ run = 'xdg-open "$(dirname "$0")"', desc = "Open dir in nemo" },
+	{ run = '''exiftool "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show EXIF" },
+]
+
+extract = [
+	{ run = 'file-roller "$1"', desc = "Archive Manager" },
+	{ run = 'unar "$1"', desc = "Extract to new folder" },
+	{ run = 'peazip "$1"', desc = "Peazip" },
+]
+
+play = [
+	{ run = 'celluloid "$@"', desc = "Celluloid", orphan = false },
+	{ run = 'audacity "$@"', desc = "Audacity", orphan = false },
+	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info" },
+]
+
+mp4edit = [
+	{ run = 'audacity "$@"', desc = 'Audacity', orphan = false },
+	{ run = 'celluloid "$@"', desc = 'Celluloid', orphan = false },
+]
+
+aup3edit = [{ run = 'audacity "$@"', desc = "Audacity", orphan = false }]
+
+pdfedit = [
+	{ run = 'okular "$@"', desc = "Okular", orphan = false },
+]
+
+mdedit = [
+	{ run = 'nvim "$@"', desc = "nvim", block = true },
+	{ run = 'typora "$@"', desc = "typora", block = true },
+	{ run = 'vim "$@"', desc = "vim", block = true },
+	{ run = 'meld "$@"', desc = "meld", block = true },
+]
+
+[open] #rules for which opener(s) for which filetypes
+
+rules = [
+
+	{ name = "*/", use = ["edit", "open", "reveal"] },
+	{ name = "*.mp4", use = ["mp4edit", "reveal"] },
+	{ name = "*.m4a", use = ["mp4edit", "reveal"] },
+	{ name = "*.conf*", use = ["edit", "reveal"] },
+	{ name = "*.pdf", use = ["pdfedit", "reveal"] },
+	{ name = "*.md", use = ["mdedit", "reveal"] },
+	{ name = "*.aup3", use = ["aup3edit", "reveal"] },
+
+	{ mime = "text/*", use = ["edit", "reveal"] },
+	{ mime = "image/*", use = ["open", "reveal"] },
+	{ mime = "audio/*", use = ["play", "reveal"] },
+	{ mime = "video/*", use = ["play", "reveal"] },
+	{ mime = "inode/x-empty", use = ["edit", "reveal"] },
+
+	{ mime = "*/javascript", use = ["edit", "reveal"] },
+	{ mime = "application/json", use = ["edit", "reveal"] },
+
+	{ mime = "application/zip", use = ["extract"] },
+	{ mime = "application/gzip", use = ["extract"] },
+	{ mime = "application/x-tar", use = ["extract"] },
+	{ mime = "application/x-bzip", use = ["extract"] },
+	{ mime = "application/x-bzip2", use = ["extract"] },
+	{ mime = "application/x-7z-compressed", use = ["extract"] },
+	{ mime = "application/x-rar", use = ["extract"] },
+	{ mime = "application/xz", use = ["extract"] },
+
+	# Fallback
+	{ mime = "*", use = ["open", "reveal"] },
+
+]
+
+[tasks]
+micro_workers = 10
+macro_workers = 25
+bizarre_retry = 5
+image_alloc = 536870912  # 512MB
+image_bound = [0, 0]
+suppress_preload = false
+
+[plugin]
+
+# my custom previewers and pre-loaders
+
+prepend_previewers = [
+	{ name = "*txt", run = "code" },
+	{ name = "*.md", run = "glow" },
+	{ name = "*.od*", run = "odt" },
+	{ name = "*.wps", run = "odt" },
+	{ name = "*.xlsx", run = "xlsx" },
+	{ name = "*.xls", run = "xls" },
+	{ name = "*.docx", run = "docx" },
+	{ name = "*.doc", run = "doc" },
+	{ mime = "text/csv", run = "miller" },
+	{ mime = "audio/*", run = "exifaudio" },
+	{ mime = "application/*zip", run = "ouch" },
+	{ mime = "application/x-tar", run = "ouch" },
+	{ mime = "application/x-bzip2", run = "ouch" },
+	{ mime = "application/x-7z-compressed", run = "ouch" },
+	{ mime = "application/x-rar", run = "ouch" },
+	{ mime = "application/xz", run = "ouch" },
+	{ mime = "application/bittorent", run = "torrent-preview"}
+]
+
+prepend_fetchers = [
+	{ id = "git", name = "*", run = "git"},
+	{ id = "git", name = "*/", run = "git"},
+]
+
+# removed below when added to core
+# preloaders = [
+#
+# 	{ name = "*", cond = "!mime", run = "mime", multi = true, prio = "high" },
+# 	# Image
+# 	{ mime = "image/vnd.djvu",    run = "noop" },
+# 	{ mime = "image/*",           run = "image" },
+# 	# Video
+# 	{ mime = "video/*",           run = "video" },
+# 	# PDF
+# 	{ mime = "application/pdf",   run = "pdf" },
+# ]
+
+previewers = [ # standard previewers
+
+	# directories
+	{ name = "*/", run = "folder", sync = true },
+
+	# Code
+	{ mime = "text/*", run = "code" },
+	{ mime = "*/xml", run = "code" },
+	{ mime = "*/javascript", run = "code" },
+	{ mime = "*/x-wine-extension-ini", run = "code" },
+
+	# JSON
+	{ mime = "application/json", run = "json" },
+
+	# Image
+	{ mime = "image/vnd.djvu", run = "noop" },
+	{ mime = "image/*", run = "image" },
+
+	# Video
+	{ mime = "video/*", run = "video" },
+
+	# PDF
+	{ mime = "application/pdf", run = "pdf" },
+
+	# Archive
+	{ mime = "application/zip", run = "archive" },
+	{ mime = "application/gzip", run = "archive" },
+	{ mime = "application/x-tar", run = "archive" },
+	{ mime = "application/x-bzip", run = "archive" },
+	{ mime = "application/x-bzip2", run = "archive" },
+	{ mime = "application/x-7z-compressed", run = "archive" },
+	{ mime = "application/x-rar", run = "archive" },
+	{ mime = "application/xz", run = "archive" },
+
+	# Fallback
+	{ name = "*", run = "file" },
+	# { name = "*", run = "hexyl" }, # use hex viewer as fallback
+
+]
+
+
+# input labels and locations
+
+[input]
+
+# cd
+cd_title = "Change directory:"
+cd_origin = "center"
+cd_offset = [0, 2, 50, 3]
+
+# create
+create_title = ["Create:", "Create (dir):"]
+create_origin = "center"
+create_offset = [0, 2, 50, 3]
+
+# rename
+rename_title = "Rename:"
+rename_origin = "center"
+rename_offset = [0, 1, 50, 3]
+
+# trash
+trash_title = "Move {n} selected file{s} to trash? (y/N)"
+trash_origin = "center"
+trash_offset = [0, 2, 40, 3]
+
+# delete
+delete_title = "DELETE {n} SELECTED PERMANENTLY? (y/n)"
+delete_origin = "center"
+# delete_offset	= [ 0, 2, 50, 3 ]
+# put message higher than others to make it stand out
+delete_offset = [0, 5, 40, 3]
+
+# filter
+filter_title = "Filter:"
+filter_origin = "center"
+filter_offset = [0, 2, 30, 3]
+
+# find
+find_title = ["Find next:", "Find previous:"]
+find_origin = "center"
+find_offset = [0, 2, 50, 3]
+
+# search
+search_title = "Search via {n}:"
+search_origin = "center"
+search_offset = [0, 2, 50, 3]
+
+# shell
+shell_title = ["Shell:", "Shell (block):"]
+shell_origin = "center"
+shell_offset = [0, 2, 30, 3]
+
+# overwrite
+overwrite_title = "Overwrite an existing file? (y/N)"
+overwrite_origin = "center"
+overwrite_offset = [0, 2, 50, 3]
+
+# quit
+quit_title = "{n} task{s} running, sure to quit? (y/N)"
+quit_origin = "center"
+quit_offset = [0, 2, 50, 3]
+
+[select]
+open_title = "Open with:"
+open_origin = "center"
+open_offset = [0, 1, 50, 11]
+
+[which]
+sort_by = "none"
+sort_sensitive = false
+sort_reverse = false
+
+[log]
+enabled = false
+
+[headsup]
