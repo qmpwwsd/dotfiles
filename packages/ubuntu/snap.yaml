@@ -1,15 +1,15 @@
 - name: nvim
   classic: true
   version: latest
-- name: firefox
-  classic: true
+# - name: firefox
+#   classic: true
   version: latest
 - name: obsidian
   classic: true
   version: latest
-- name: slack
-  classic: true
-  version: latest
-- name: telegram-desktop
-  classic: true
-  version: latest
+# - name: slack
+#   classic: true
+#   version: latest
+# - name: telegram-desktop
+#   classic: true
+#   version: latest

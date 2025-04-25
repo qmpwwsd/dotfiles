@@ -4,7 +4,7 @@ source "$(dirname "$0")/env.sh"
 
 echo "🔗 Symlinking dotfiles..."
 
-stow -d "$HOME_DIR" -t "$HOME" .
-stow -d "$CONFIG_DIR" -t "$HOME/.config" .
+cd "$DOTFILES_ROOT"
+stow -v --adopt -d "$DOTFILES_ROOT" -t "$HOME" home
 
 echo "✅ Dotfiles linked."

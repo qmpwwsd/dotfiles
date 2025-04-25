@@ -16,6 +16,19 @@ if ! grep -q 'asdf.sh' "$HOME/.zshrc"; then
   echo '. "$HOME/.asdf/completions/asdf.bash"' >> "$HOME/.zshrc"
 fi
 
+sudo apt update && sudo apt install -y \
+  libbz2-dev \
+  libreadline-dev \
+  libssl-dev \
+  libncursesw5-dev \
+  libsqlite3-dev \
+  libffi-dev \
+  zlib1g-dev \
+  liblzma-dev \
+  tk-dev \
+  uuid-dev \
+  build-essential
+
 # Source for current session
 . "$HOME/.asdf/asdf.sh"
 

@@ -16,6 +16,7 @@ export PATH="$PATH:$HOME/neovim/bin"
 export PATH="$PATH:/opt/homebrew/opt/ruby/bin"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:/home/denys/.nvm/versions/node/v23.8.0/bin"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # Antigen
 source "$ZSH/plugins/antigen.zsh"
@@ -165,3 +166,8 @@ alias fk="thefuck"
 
 . "$HOME/.atuin/bin/env"
 . "$HOME/.local/bin/env"
+
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/asdf.sh"
+fpath=("$HOME/.asdf/completions" $fpath)
+autoload -Uz compinit && compinit

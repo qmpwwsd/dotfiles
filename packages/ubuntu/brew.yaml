@@ -28,7 +28,7 @@
   version: latest
 - name: hub
   version: latest
-- name: jira-cli
+- name: ankitpokhrel/jira-cli/jira-cli
   version: latest
 - name: jless
   version: latest
@@ -36,7 +36,7 @@
   version: latest
 - name: jql
   version: latest
-- name: k9s
+- name: derailed/k9s/k9s
   version: latest
 - name: kaskade
   version: latest
@@ -46,9 +46,9 @@
   version: latest
 - name: less
   version: latest
-- name: loggo
+- name: aurc/loggo/loggo
   version: latest
-- name: mani
+- name: alajmo/mani/mani
   version: latest
 - name: mpdecimal
   version: latest
@@ -58,23 +58,25 @@
   version: latest
 - name: ncurses
   version: latest
-- name: oh-my-posh
+- name: jandedobbeleer/oh-my-posh/oh-my-posh
   version: latest
 - name: oniguruma
   version: latest
 - name: openldap
   version: latest
-- name: pet
+- name: knqyf263/pet/pet
   version: latest
-- name: puffin
+- name: siddhantac/puffin/puffin
   version: latest
-- name: qq
+- name: jfryy/tap/qq
   version: latest
 - name: rainfrog
   version: latest
 - name: restic
   version: latest
 - name: ripgrep
+  version: latest
+- name: serpl
   version: latest
 - name: sqlite
   version: latest
@@ -84,9 +86,11 @@
   version: latest
 - name: thefuck
   version: latest
+- name: achannarasappa/tap/ticker
+  version: latest
 - name: unzip
   version: latest
-- name: wireman
+- name: preiter93/wireman/wireman
   version: latest
 - name: wtfis
   version: latest

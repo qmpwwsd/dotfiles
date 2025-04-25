@@ -61,4 +61,7 @@ load_and_install() {
       install_or_update_tool "$name" "$method" "$version" "$flags"
     done
   fi
+
+  # Download antigen to your dotfiles
+  curl -L git.io/antigen > ~/dotfiles/home/.config/zsh/plugins/antigen.zsh
 }
