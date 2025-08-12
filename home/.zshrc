@@ -17,6 +17,7 @@ export PATH="$PATH:/opt/homebrew/opt/ruby/bin"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:/home/denys/.nvm/versions/node/v23.8.0/bin"
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Antigen
 source "$ZSH/plugins/antigen.zsh"
