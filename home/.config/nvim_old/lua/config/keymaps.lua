@@ -101,10 +101,8 @@ end, { desc = "Navigate to function end" })
 -- ##################
 
 -- Live Server
-map("n", "<leader>ls", ":split | term live-server<CR>", { desc = "[L]aunch Live [S]erver", noremap = true, silent = true })
+map("n", "<leader>ls", ":split | term live-server<CR>", { desc = "Launch Live Server", noremap = true, silent = true })
 
 -- SSR (Search and Replace)
-map({ "n", "x" }, "<leader>sr", function() require("ssr").open() end, { desc = "[S]earch and [R]eplace (SSR)" })
+map({ "n", "x" }, "<leader>sr", function() require("ssr").open() end, { desc = "Search and Replace (SSR)" })
 
--- Twilight toggle
-map("n", "<leader>tw", "<cmd>Twilight<cr>", { desc = "[T]oggle T[w]ilight" })
