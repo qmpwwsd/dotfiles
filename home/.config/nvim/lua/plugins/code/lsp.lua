@@ -14,11 +14,9 @@ return {
     "williamboman/mason-lspconfig.nvim", -- Mason integration for lspconfig
     "nvimtools/none-ls.nvim", -- Formatter and Linter
     "zeioth/garbage-day.nvim",  -- Garbage Day plugin
-    "jose-elias-alvarez/nvim-lsp-ts-utils",
-    'nvimdev/lspsaga.nvim'
+    "nvimdev/lspsaga.nvim",
   },
   config = function()
-    local lspconfig = require("lspconfig")
     local cmp = require("cmp")
     local luasnip = require("luasnip")
     local autopairs = require("nvim-autopairs")
@@ -27,7 +25,6 @@ return {
     local mason_lspconfig = require("mason-lspconfig")
     local null_ls = require("null-ls")
     local garbage_day = require("garbage-day")
-    local ts_utils = require("nvim-lsp-ts-utils")
     local lsp_saga = require("lspsaga")
 
     local on_attach = function(client, bufnr)
@@ -92,7 +89,10 @@ return {
     -- Setup Mason
     mason.setup()
     mason_lspconfig.setup({
-      ensure_installed = { "rust_analyzer", "lua_ls", "gopls", "pyright", "html", "graphql", "emmet_ls", "eslint", "tailwindcss" },
+      ensure_installed = { 
+        "rust_analyzer", "lua_ls", "gopls", "pyright", "html", "graphql", 
+        "emmet_ls", "eslint", "tailwindcss", "ts_ls", "vue_ls"
+      },
     })
 
     -- Load VSCode snippets
@@ -151,19 +151,21 @@ return {
     -- Extend capabilities for LSP to support nvim-cmp
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    -- LSP Configurations
-    lspconfig.lua_ls.setup({
+    -- LSP Configurations using vim.lsp.config
+    vim.lsp.config.lua_ls = {
       capabilities = capabilities,
       settings = {
         Lua = {
           diagnostics = { globals = { "vim" } },
         },
       },
-    })
+    }
 
-    lspconfig.pyright.setup({ capabilities = capabilities })
+    vim.lsp.config.pyright = { 
+      capabilities = capabilities 
+    }
 
-    lspconfig.rust_analyzer.setup({
+    vim.lsp.config.rust_analyzer = {
       capabilities = capabilities,
       settings = {
         ["rust-analyzer"] = {
@@ -171,9 +173,9 @@ return {
           checkOnSave = { command = "clippy" },
         },
       },
-    })
+    }
 
-    lspconfig.gopls.setup({
+    vim.lsp.config.gopls = {
       capabilities = capabilities,
       settings = {
         gopls = {
@@ -181,183 +183,72 @@ return {
           staticcheck = true,
         },
       },
-    })
+    }
 
-    lspconfig.html.setup({ capabilities = capabilities })
+    vim.lsp.config.html = { capabilities = capabilities }
 
-    lspconfig.graphql.setup({ capabilities = capabilities })
-    lspconfig.tailwindcss.setup({ capabilities = capabilities })
+    vim.lsp.config.graphql = { capabilities = capabilities }
+    vim.lsp.config.tailwindcss = { capabilities = capabilities }
 
-    lspconfig.emmet_ls.setup({
+    vim.lsp.config.emmet_ls = {
       capabilities = capabilities,
       filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
       init_options = { html = { options = { ["bem.enabled"] = true } } }
-    })
+    }
 
-    lspconfig.volar.setup({
-      capabilities = capabilities,
-      init_options = {
-        vue = {
-          hybridMode = false
-        }
-      },
-      settings = {
-        typescript = {
-          inlayHints = {
-            enumMemberValues = {
-              enabled = true
-            },
-            functionLikeReturnTypes = {
-              enabled = true
-            },
-            propertyDeclarationTypes = {
-              enabled = true
-            },
-            parameterTypes = {
-              enabled = true,
-              suppressWhenArgumentMatchesName = true
-            },
-            variableTypes = {
-              enabled = true
-            }
-          }
-        }
-      }
-    })
-
-    -- TypeScript/JavaScript (tsserver)
-    lspconfig.ts_ls.setup({
+    -- TypeScript/JavaScript
+    -- Note: "vue" filetype is required so ts_ls attaches to .vue buffers for vue_ls to work
+    vim.lsp.config.ts_ls = {
       capabilities = capabilities,
       filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" },
-
-      root_dir = function(fname)
-        local root_pattern = require("lspconfig.util").root_pattern("nuxt.config.js", "nuxt.config.ts", "package.json")
-        return root_pattern(fname) or vim.fn.getcwd()  -- dynamic root for nested `nuxt.config.js` or `nuxt.config.ts`
-      end,
-
+      on_attach = on_attach,
       settings = {
-        javascript = {
-            inlayHints = {
-                includeInlayParameterNameHints = "all",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-            },
-            suggest = {
-                completeFunctionCalls = true,
-                autoImports = true,
-            },
-            preferences = {
-                importModuleSpecifier = "relative",
-            },
-        },
         typescript = {
-          tsdk = vim.fn.stdpath("data") .. "/mason/packages/typescript-language-server/node_modules/typescript/lib", -- Point to TS SDK
           inlayHints = {
-              includeInlayParameterNameHints = "all",
-              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
           },
-          suggest = {
-              completeFunctionCalls = true,
-              autoImports = true,
-          },
-          preferences = {
-              importModuleSpecifier = "relative",
-          },
-          -- Enable Vue 3 features in TypeScript
-          vueCompilerOptions = {
-            moduleResolution = "node", -- Use node resolution strategy for Vue
-          },
+          suggest = { completeFunctionCalls = true, autoImports = true },
+          preferences = { importModuleSpecifier = "relative" },
         },
-        vue = {
-          enable = true,  -- Enable Vue in the LSP configuration
-          useWorkspaceDependencies = true,  -- Use workspace dependencies for Vue
-          -- Ensure that we have Vue types loaded
-        },
-
-        -- Fix paths for aliases like `@`, `#components`, etc.
-        preferences = {
-          importModuleSpecifier = "relative",  -- Ensure that imports are relative
-          includeCompletionsForImportStatements = true,  -- Include imports in autocompletions
+        javascript = {
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
+          suggest = { completeFunctionCalls = true, autoImports = true },
+          preferences = { importModuleSpecifier = "relative" },
         },
       },
-
       init_options = {
         preferences = {
-          importModuleSpecifier = "relative",  -- Use relative imports
-          includeCompletionsForImportStatements = true,  -- Include imports in completions
+          importModuleSpecifier = "relative",
+          includeCompletionsForImportStatements = true,
         },
       },
+    }
 
-      on_attach = function(client, bufnr)
-        -- Add `node_modules` to path to help with module resolution
-        vim.opt_local.path:append("node_modules")
-
-        -- Ensure that `ts_utils` is set up for managing imports, organizing code, etc.
-        ts_utils.setup({
-            debug = false,
-            disable_commands = false,
-            enable_import_on_completion = true,
-
-            -- import all
-            import_all_timeout = 5000,
-            import_all_priorities = {
-                same_file = 1,
-                local_files = 2,
-                buffer_content = 3,
-                buffers = 4,
-            },
-            import_all_scan_buffers = 100,
-            import_all_select_source = false,
-            always_organize_imports = true,
-
-            -- filter diagnostics
-            filter_out_diagnostics_by_severity = {},
-            filter_out_diagnostics_by_code = {},
-
-            -- inlay hints
-            auto_inlay_hints = true,
-            inlay_hints_highlight = "Comment",
-            inlay_hints_priority = 200,
-            inlay_hints_throttle = 150,
-            inlay_hints_format = {
-                Type = {},
-                Parameter = {},
-                Enum = {},
-            },
-
-            -- update imports on file move
-            update_imports_on_move = true,
-            require_confirmation_on_move = true,
-            watch_dir = nil,
-        })
-
-        -- required to fix code action ranges and filter diagnostics
-        ts_utils.setup_client(client)
-
-        -- key mappings
-        local opts = { silent = true }
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "frn", ":TSLspRenameFile<CR>", opts)
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
-
-        -- Call global `on_attach` function to get standard keybindings
-        on_attach(client, bufnr)
-      end,
-    })
+    -- Vue Language Server
+    -- vue_ls delegates TypeScript requests to ts_ls (which must also attach to .vue files)
+    vim.lsp.config.vue_ls = {
+      capabilities = capabilities,
+      on_attach = on_attach,
+    }
 
 
-    lspconfig.eslint.setup({
+    vim.lsp.config.eslint = {
       capabilities = capabilities,
       on_attach = function(client, bufnr)
         -- Automatically fix issues on save
@@ -370,7 +261,14 @@ return {
           })
         end
       end,
-    })
+    }
+
+    -- Enable all configured LSP servers
+    local servers = { "lua_ls", "pyright", "rust_analyzer", "gopls", "html", "graphql", 
+                      "tailwindcss", "emmet_ls", "eslint", "ts_ls", "vue_ls" }
+    for _, server in ipairs(servers) do
+      vim.lsp.enable(server)
+    end
 
     -- Setup null-ls for Prettier and ESLint
     null_ls.setup({

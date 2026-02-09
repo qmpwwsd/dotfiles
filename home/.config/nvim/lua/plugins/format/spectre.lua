@@ -1,7 +1,7 @@
 return {
   "nvim-pack/nvim-spectre",
   dependencies = {
-    "nvim-web-devicons",
+    "echasnovski/mini.icons",
     "folke/trouble.nvim",
   },
   config = function()

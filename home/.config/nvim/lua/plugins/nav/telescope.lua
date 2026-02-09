@@ -10,7 +10,7 @@ return {
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },  -- FZF-native extension for speed
     "nvim-telescope/telescope-ui-select.nvim",  -- UI Select extension
     "ThePrimeagen/harpoon",  -- Harpoon plugin for project management
-    { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },  -- Devicons if you have Nerd Fonts
+    { "echasnovski/mini.icons", enabled = vim.g.have_nerd_font },  -- Icons if you have Nerd Fonts
     "folke/todo-comments.nvim",  -- Todo comments integration
   },
   opts = {

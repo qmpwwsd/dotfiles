@@ -2,7 +2,6 @@
 return {
   "goolord/alpha-nvim",
   event = "VimEnter",
-  -- dependencies = { "nvim-tree/nvim-web-devicons" },
   dependencies = {
     "echasnovski/mini.icons",
     "nvim-lua/plenary.nvim",

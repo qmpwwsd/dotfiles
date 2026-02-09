@@ -6,8 +6,15 @@ return {
   "tpope/vim-repeat",
   { "godlygeek/tabular", cmd = "Tabularize" },
   {
-    "nvim-tree/nvim-web-devicons",
-    lazy = true,
+    "echasnovski/mini.icons",
+    lazy = false,
+    opts = {},
+    init = function()
+      package.preload["nvim-web-devicons"] = function()
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+    end,
   },
   {
     "mg979/vim-visual-multi",

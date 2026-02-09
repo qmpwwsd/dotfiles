@@ -173,3 +173,8 @@ alias fk="thefuck"
 # fpath=("$HOME/.asdf/completions" $fpath)
 autoload -Uz compinit && compinit
 export PATH="$HOME/.local/bin:$PATH"
+
+# Pyenv
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrcexport PYENV_ROOT="$HOME/.pyenv"
